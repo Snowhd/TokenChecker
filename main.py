@@ -37,12 +37,10 @@ class TokenChecker:
                 logger.error(f"Error processing token {client.token}: {e}")
                 invalid_tokens.append(client.token)
 
-        # Write results to files in ./data/ directory
         self.write_to_file("./data/valid_tokens.txt", valid_tokens)
         self.write_to_file("./data/invalid_tokens.txt", invalid_tokens)
 
     def write_to_file(self, file: str, tokens: list[str]):
-        # Ensure the directory exists
         os.makedirs(os.path.dirname(file), exist_ok=True)
         with open(file, "w") as filepath:
             filepath.write("\n".join(tokens))
