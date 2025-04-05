@@ -2,13 +2,13 @@ import logging as logger
 import os
 import discord
 
-# ANSI-Farbcodes für verschiedene Log-Levels
+
 COLOR_MAP = {
-    'DEBUG': '\033[37m',      # Grau
-    'INFO': '\033[36m',       # Cyan
-    'WARNING': '\033[33m',    # Gelb
-    'ERROR': '\033[31m',      # Rot
-    'CRITICAL': '\033[41m',   # Rot mit Hintergrund
+    'DEBUG': '\033[37m',     
+    'INFO': '\033[36m',      
+    'WARNING': '\033[33m',   
+    'ERROR': '\033[31m',      
+    'CRITICAL': '\033[41m',  
 }
 RESET = '\033[0m'
 
