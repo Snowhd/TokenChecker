@@ -74,6 +74,25 @@ class Discord:
 
         raise Exception("Token Invalid!")
 
+    def get_nitro_type(self) -> str:
+        response = self.session.get(url=self.uri)
+        if response.status_code == 200:
+            nitro_type = response.json()["premium_type"]
+            if nitro_type == 2:
+                return "Nitro"
+            elif nitro_type == 3:
+                return "Nitro Basic"
+            elif nitro_type == 1:
+                return "Nitro Classic"
+            elif nitro_type == 0:
+                return "None"
+
+        elif response.status_code == 429:
+            logger.warning("Ratelimit reached! retrying in 30 seconds...")
+            sleep(30)
+            return self.get_nitro_type()
+        raise Exception("Token Invalid!")
+
     def nitro_expires_in(self) -> list:
         logger.debug("Checking nitro expiration time...")
 
@@ -161,4 +180,48 @@ class Discord:
             sleep(30)
             return self.account_is_more_then_year_old()
 
+        raise Exception("Token Invalid!")
+
+    def get_email(self) -> str:
+        response = self.session.get(url=self.uri)
+        if response.status_code == 200:
+            body = response.json()
+            return body["email"]
+
+        if response.status_code == 429:
+            logger.warning("Ratelimit reached! retrying in 30 seconds...")
+            sleep(30)
+            return self.get_email()
+        raise Exception("Token Invalid!")
+
+    def get_username(self) -> str:
+        response = self.session.get(url=self.uri)
+        if response.status_code == 200:
+            body = response.json()
+            return body["username"]
+        if response.status_code == 429:
+            logger.warning("Ratelimit reached! retrying in 30 seconds...")
+            sleep(30)
+            return self.get_username()
+        raise Exception("Token Invalid!")
+
+    def get_phone(self) -> str:
+        response = self.session.get(url=self.uri)
+        if response.status_code == 200:
+            body = response.json()
+            return body["phone"]
+
+        if response.status_code == 429:
+            logger.warning("Ratelimit reached! retrying in 30 seconds...")
+            sleep(30)
+            return self.get_phone()
+        raise Exception("Token Invalid!")
+    def get_mfa_enabled(self) -> bool:
+        response = self.session.get(url=self.uri)
+        if response.status_code == 200:
+            return response.json()["mfa_enabled"]
+        if response.status_code == 429:
+            logger.warning("Ratelimit reached! retrying in 30 seconds...")
+            sleep(30)
+            return self.get_mfa_enabled()
         raise Exception("Token Invalid!")
