@@ -66,8 +66,20 @@ class TokenChecker:
                 seconds = nitro_expiry[0][3] if nitro_expiry else 0
 
                 verification_status = 'email verified' if email else ('phone fully verified' if phone else 'not verified')
-                logger.info(f"[{index}] Token={client.token[:10]}... Status={'valid' if verified else 'invalid'} Age={'>1 year' if account_age_check else '<1 year'} Verification={verification_status} HasNitro={has_nitro} NitroExpiry={days}d {hours}h {minutes}m {seconds}s LeftBoosts={boosts}")
-
+                logger.info(
+                    "[{index}] Token={token}... Status={status} Age={age} Verification={verification} HasNitro={has_nitro} NitroExpiry={days}d {hours}h {minutes}m {seconds}s LeftBoosts={boosts}".format(
+                        index=index,
+                        token=client.token[:10],
+                        status='valid' if verified else 'invalid',
+                        age='>1 year' if account_age_check else '<1 year',
+                        verification=verification_status,
+                        has_nitro=has_nitro,
+                        days=days,
+                        hours=hours,
+                        minutes=minutes,
+                        seconds=seconds,
+                        boosts=boosts
+                    ))
                 return client.token
 
         except Exception as e:
@@ -128,6 +140,7 @@ async def main():
 
 if __name__ == "__main__":
     handler = logger.StreamHandler()
+
     handler.setFormatter(ColorFormatter(
         fmt='%(asctime)s - %(levelname)s - %(message)s'
     ))
