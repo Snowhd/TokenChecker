@@ -3,21 +3,6 @@ import os
 import asyncio
 from discord import Discord
 
-COLOR_MAP = {
-    'DEBUG': '\033[37m',
-    'INFO': '\033[36m',
-    'WARNING': '\033[33m',
-    'ERROR': '\033[31m',
-    'CRITICAL': '\033[41m',
-}
-RESET = '\033[0m'
-
-class ColorFormatter(logger.Formatter):
-    def format(self, record):
-        log_color = COLOR_MAP.get(record.levelname, '')
-        message = super().format(record)
-        return f"{log_color}{message}{RESET}"
-
 class TokenChecker:
     def __init__(self, tokens: list[str]):
         self.clients = [Discord(token) for token in tokens]
@@ -26,7 +11,7 @@ class TokenChecker:
         try:
             async with client:
                 if not await client.token_is_valid():
-                    logger.warning(f"[{index}] invalid token → {client.token[:10]}...")
+                    logger.warning(f"[{index}] invalid token → {client.token}...\n\n")
                     return None
 
                 results = await asyncio.gather(
@@ -66,24 +51,20 @@ class TokenChecker:
                 seconds = nitro_expiry[0][3] if nitro_expiry else 0
 
                 verification_status = 'email verified' if email else ('phone fully verified' if phone else 'not verified')
-                logger.info(
-                    "[{index}] Token={token}... Status={status} Age={age} Verification={verification} HasNitro={has_nitro} NitroExpiry={days}d {hours}h {minutes}m {seconds}s LeftBoosts={boosts}".format(
-                        index=index,
-                        token=client.token[:10],
-                        status='valid' if verified else 'invalid',
-                        age='>1 year' if account_age_check else '<1 year',
-                        verification=verification_status,
-                        has_nitro=has_nitro,
-                        days=days,
-                        hours=hours,
-                        minutes=minutes,
-                        seconds=seconds,
-                        boosts=boosts
-                    ))
+
+
+                logger.info(f"Token:       \t\t{client.token}")
+                logger.info(f"Status:      \t\t{'valid' if verified else 'invalid'}")
+                logger.info(f"Age:         \t\t{'>1 year' if account_age_check else '<1 year'}")
+                logger.info(f"Verification:\t\t{verification_status}")
+                logger.info(f"HasNitro:    \t\t{has_nitro}")
+                logger.info(f"NitroExpiry: \t\t{days}d {hours}h {minutes}m {seconds}s")
+                logger.info(f"LeftBoosts:  \t\t{boosts}\n\n")
+
                 return client.token
 
         except Exception as e:
-            logger.error(f"[{index}] couldn't process token {client.token[:10]}...: {str(e)[:100]}")
+            logger.error(f"[{index}] couldn't process token {client.token[:10]}...: {str(e)[:100]}\n\n")
             return None
 
     async def check_tokens(self):
@@ -141,9 +122,11 @@ async def main():
 if __name__ == "__main__":
     handler = logger.StreamHandler()
 
-    handler.setFormatter(ColorFormatter(
-        fmt='%(asctime)s - %(levelname)s - %(message)s'
-    ))
+    unicode = "🔹"
+
+    handler.setFormatter(
+        logger.Formatter(fmt=f'{unicode} %(message)s')
+    )
 
     logger.basicConfig(
         level=logger.INFO,
