@@ -66,7 +66,7 @@ class TokenChecker:
                 seconds = nitro_expiry[0][3] if nitro_expiry else 0
 
                 verification_status = 'email verified' if email else ('phone fully verified' if phone else 'not verified')
-                logger.info(f"[{index}] Token={client.token[:10]}... Status={'valid' if verified else 'invalid'} Age={'>1 year' if account_age_check else '<1 year'} Verification={verification_status} HasNitro={'✅' if has_nitro else '❌'} NitroExpiry={days}d {hours}h {minutes}m {seconds}s LeftBoosts={boosts}")
+                logger.info(f"[{index}] Token={client.token[:10]}... Status={'valid' if verified else 'invalid'} Age={'>1 year' if account_age_check else '<1 year'} Verification={verification_status} HasNitro={has_nitro} NitroExpiry={days}d {hours}h {minutes}m {seconds}s LeftBoosts={boosts}")
 
                 return client.token
 
