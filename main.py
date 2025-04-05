@@ -65,17 +65,8 @@ class TokenChecker:
                 minutes = nitro_expiry[0][2] if nitro_expiry else 0
                 seconds = nitro_expiry[0][3] if nitro_expiry else 0
 
-                logger.info("-" * 50)
-                logger.info(f"[{index}] Token: {client.token[:10]}... ({user_tag})")
-                logger.info(f"  • Email: {email}")
-                logger.info(f"  • Phone: {phone}")
-                logger.info(f"  • Status: {'✅ verified' if verified else '❌ not verified'}")
-                logger.info(f"  • MFA enabled: {mfa_enabled}")
-                logger.info(f"  • Age: {'✅ >1 year' if account_age_check else '❌ <1 year'}")
-                logger.info(f"  • Nitro: {'✅' if has_nitro else '❌'} – Type: {nitro_type}")
-                logger.info(f"  • Nitro expires in: {days}d {hours}h {minutes}m")
-                logger.info(f"  • Boosts left: {boosts}")
-                logger.info("-" * 50)
+                verification_status = 'email verified' if email else ('phone fully verified' if phone else 'not verified')
+                logger.info(f"[{index}] Token={client.token[:10]}... Status={'valid' if verified else 'invalid'} Age={'>1 year' if account_age_check else '<1 year'} Verification={verification_status} HasNitro={'✅' if has_nitro else '❌'} NitroExpiry={days}d {hours}h {minutes}m {seconds}s LeftBoosts={boosts}")
 
                 return client.token
 

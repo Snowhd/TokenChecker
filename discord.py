@@ -114,7 +114,7 @@ class Discord:
         boosts = await self._get_boosts()
         return sum(
             1 for boost in boosts
-            if boost.get("premium_guild_subscription") and not boost.get("canceled", True)
+            if boost.get("premium_guild_subscription") is None and not boost.get("canceled", True)
         )
 
     async def get_verification_status(self) -> bool:
@@ -148,7 +148,6 @@ class Discord:
         return data.get("mfa_enabled", False) if data else False
 
     async def get_all_data_parallel(self) -> dict:
-
         user_data, subs, boosts = await asyncio.gather(
             self._get_user_data(),
             self._get_subscriptions(),
@@ -158,19 +157,20 @@ class Discord:
         return {
             "valid": user_data is not None,
             "username": user_data.get("username") if user_data else "Unknown",
-            "nitro": self.get_nitro_type.__wrapped__(self),
+            "nitro": await self.get_nitro_type(),
             "email": user_data.get("email") if user_data else "",
             "phone": user_data.get("phone") if user_data else "",
             "mfa_enabled": user_data.get("mfa_enabled") if user_data else False,
             "verified": user_data.get("verified") if user_data else False,
             "account_age": await self.account_is_more_then_year_old(),
             "boosts_left": sum(
-                1 for b in boosts
-                if b.get("premium_guild_subscription") and not b.get("canceled", True)
-            ),
+                1 for boost in boosts
+                if boost.get("premium_guild_subscription") is not None and not boost.get("canceled", True)
+            )
+            ,
             "subscriptions": [
                 calculate_time_left(sub["current_period_end"])
                 for sub in subs
-                if isinstance(subs, list)
+                if isinstance(sub, dict) and "current_period_end" in sub
             ]
         }
