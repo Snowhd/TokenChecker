@@ -1,1 +1,4 @@
-data
+./data
+data/invalid_tokens.txt
+data/tokens.txt
+data/valid_tokens.txt
