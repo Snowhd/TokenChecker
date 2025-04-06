@@ -35,8 +35,8 @@ project/
 │   ├── valid_tokens.txt    # Output – all valid tokens
 │   └── invalid_tokens.txt  # Output – all invalid tokens
 │
-├── discord_checker.py      # Main logic and token validation
-├── discord_client.py       # API interface for user details
+├── main.py      # start of the python script
+├── discord.py       # Main logic and token validation
 └── README.md               # This file
 ```
 
@@ -45,7 +45,7 @@ project/
 1. Clone the repository
 
 ```bash
-git clone https://github.com/yourusername/discord-token-checker.git
+git clone https://github.com/Snowhd/TokenChecker.git
 cd discord-token-checker
 ```
 
